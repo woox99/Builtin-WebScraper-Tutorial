@@ -17,10 +17,12 @@ pip3 install httpx
 pip3 install selectolax
 ```
 
+```
+pip3 install requests
+```
+
 ## References
-### Tutorial Video Playlist
-https://www.youtube.com/playlist?list=PLRzwgpycm-FiTz9bGQoITAzFEOJkbF6Qp
-### Status Code Documentation
-https://www.python-httpx.org/quickstart/#response-status-codes
+### Tutorial Video
+https://www.youtube.com/watch?v=DqtlR0y0suo&t=184s
 
 
