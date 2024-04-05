@@ -39,7 +39,7 @@ def parse_search_page(html):
 
 def main():
     url = 'https://builtin.com/companies?page='
-    for page in range(1, 2):
+    for page in range(8, 9):
         print(f"Scraping page: {page}") # Console Annotation
         html = get_html(url, page)
         if not html:

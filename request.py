@@ -15,7 +15,7 @@ payload = json.dumps({
     "operationName": "GetCompanyTechnologies",
     "query": "query GetCompanyTechnologies($id: Int!) {\n companyByID(id: $id) {\n technologies {\n name\n urlName\n categoryName\n }\n extraTechnologies {\n name\n categoryName\n }\n }\n}\n",
     "variables": {
-    "id": 53965
+    "id": 105487
     }
 })
 headers = {
@@ -33,7 +33,7 @@ tech_list = []
 
 for tech in techs:
     new_tech = Tech(
-        entity_id = 53965,
+        entity_id = 105487,
         company_name = 'ab tasty',
         tech_name = tech['name'],
         tech_category= tech['categoryName']

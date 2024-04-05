@@ -3,7 +3,8 @@ from selectolax.parser import HTMLParser
 import time
 import requests
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, fields
+import csv
 
 @dataclass
 class Tech:
@@ -20,6 +21,7 @@ def get_html(url, page):
     }
     res = httpx.get(url + str(page), headers=headers, follow_redirects=True)
 
+    time.sleep(1)
     print(f'Status code: {res.status_code}') # Console annotation
     try:
         res.raise_for_status()
@@ -74,11 +76,20 @@ def get_comapany_techs(entity_id, company_name):
             tech_name = tech['name'],
             tech_category= tech['categoryName']
         )
-        yield new_tech
+        time.sleep(.25)
+        append_to_csv(asdict(new_tech))
+
+# This function creates/appends data to csv a new append.csv file
+def append_to_csv(tech):
+    field_names = [field.name for field in fields(Tech)]
+    with open('append.csv', 'a', newline='') as f:
+        writer = csv.DictWriter(f, field_names)
+        writer.writerow(tech)
 
 def main():
     url = 'https://builtin.com/companies?page='
-    for page in range(1, 2):
+    for page in range(8, 11):
+        time.sleep(1)
         print(f"Scraping page: {page}") # Console Annotation
         html = get_html(url, page)
         if not html:
@@ -86,15 +97,10 @@ def main():
         companies = parse_search_page(html)
 
         for company in companies:
-            # Sleep before each api request
-            print('Sleeping..') # Console annotation
-            time.sleep(10)
+            time.sleep(1)
             print(f"Retreiving {company['name']}'s tech..") # Console annotation
+            get_comapany_techs(company['id'], company['name'])
 
-            techs = get_comapany_techs(company['id'], company['name'])
-            for tech in techs:
-                print(asdict(tech))
-                
         print('Scraping Finished.') # Console Annotation
 
 
