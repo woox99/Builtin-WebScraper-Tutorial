@@ -92,7 +92,7 @@ def append_to_csv(tech):
 
 def main():
     url = 'https://builtin.com/companies?page='
-    for page in range(200, 300):
+    for page in range(1610, 2900):
         time.sleep(0.5)
         print(f"Scraping page: {page}") # Console Annotation
         html = get_html(url, page)
@@ -101,7 +101,7 @@ def main():
         companies = parse_search_page(html)
 
         for company in companies:
-            time.sleep(0.1)
+            # time.sleep(0.1)
             print(f"Retreiving {company['name']}'s tech..") # Console annotation
             get_comapany_techs(company['id'], company['name'])
 
