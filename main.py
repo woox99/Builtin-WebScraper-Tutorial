@@ -50,34 +50,38 @@ def parse_search_page(html):
             yield data
 
 def get_comapany_techs(entity_id, company_name):
-    url = "https://api.builtin.com/graphql"
+    try:
+        url = "https://api.builtin.com/graphql"
 
-    payload = json.dumps({
-        "operationName": "GetCompanyTechnologies",
-        "query": "query GetCompanyTechnologies($id: Int!) {\n companyByID(id: $id) {\n technologies {\n name\n urlName\n categoryName\n }\n extraTechnologies {\n name\n categoryName\n }\n }\n}\n",
-        "variables": {
-        "id": entity_id
+        payload = json.dumps({
+            "operationName": "GetCompanyTechnologies",
+            "query": "query GetCompanyTechnologies($id: Int!) {\n companyByID(id: $id) {\n technologies {\n name\n urlName\n categoryName\n }\n extraTechnologies {\n name\n categoryName\n }\n }\n}\n",
+            "variables": {
+            "id": entity_id
+            }
+        })
+        headers = {
+            'Content-Type': 'application/json',
+            'Cookie': '__cf_bm=ZeNfR0EkBcvQlfEIOy1RSpX2Qn62TDVjeo56SI7G_WY-1712182970-1.0.1.1-03XZzLV25fTbcZhcoV.tAX3VeSiWsYYDPL3WjxLqDzJrMh6VdjAe7cwOjVXZE5ZDLmxODnP4c8_BBbD74YTT6A'
         }
-    })
-    headers = {
-        'Content-Type': 'application/json',
-        'Cookie': '__cf_bm=ZeNfR0EkBcvQlfEIOy1RSpX2Qn62TDVjeo56SI7G_WY-1712182970-1.0.1.1-03XZzLV25fTbcZhcoV.tAX3VeSiWsYYDPL3WjxLqDzJrMh6VdjAe7cwOjVXZE5ZDLmxODnP4c8_BBbD74YTT6A'
-    }
 
-    res = requests.request("POST", url, headers=headers, data=payload)
+        res = requests.request("POST", url, headers=headers, data=payload)
 
-    data = res.json()
-    techs = data['data']['companyByID']['technologies']
+        data = res.json()
+        techs = data['data']['companyByID']['technologies']
 
-    for tech in techs:
-        new_tech = Tech(
-            entity_id = str(entity_id),
-            company_name = company_name,
-            tech_name = tech['name'],
-            tech_category= tech['categoryName']
-        )
-        time.sleep(.25)
-        append_to_csv(asdict(new_tech))
+        for tech in techs:
+            if 'engineering' in tech['categoryName']:
+                new_tech = Tech(
+                    entity_id = str(entity_id),
+                    company_name = company_name,
+                    tech_name = tech['name'],
+                    tech_category= tech['categoryName']
+                )
+                append_to_csv(asdict(new_tech))
+
+    except Exception as e:
+        print(f"An error occurred while processing {company_name}: {str(e)}")
 
 # This function creates/appends data to csv a new append.csv file
 def append_to_csv(tech):
@@ -88,7 +92,7 @@ def append_to_csv(tech):
 
 def main():
     url = 'https://builtin.com/companies?page='
-    for page in range(8, 11):
+    for page in range(28, 31):
         time.sleep(1)
         print(f"Scraping page: {page}") # Console Annotation
         html = get_html(url, page)

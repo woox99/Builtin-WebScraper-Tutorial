@@ -15,7 +15,7 @@ payload = json.dumps({
     "operationName": "GetCompanyTechnologies",
     "query": "query GetCompanyTechnologies($id: Int!) {\n companyByID(id: $id) {\n technologies {\n name\n urlName\n categoryName\n }\n extraTechnologies {\n name\n categoryName\n }\n }\n}\n",
     "variables": {
-    "id": 105487
+    "id": 63899
     }
 })
 headers = {
@@ -27,18 +27,21 @@ res = requests.request("POST", url, headers=headers, data=payload)
 
 # watch the rest of the video to find out how to use pandas to easily convert json to csv
 data = res.json()
+# add data['extraTechnologies']
 techs = data['data']['companyByID']['technologies']
 
 tech_list = []
 
 for tech in techs:
-    new_tech = Tech(
-        entity_id = 105487,
-        company_name = 'ab tasty',
-        tech_name = tech['name'],
-        tech_category= tech['categoryName']
-    )
-    tech_list.append(new_tech)
+    if 'engineering' in tech['categoryName']:
+        new_tech = Tech(
+            entity_id =63899,
+            company_name = 'grinder',
+            tech_name = tech['name'],
+            tech_category= tech['categoryName']
+        )
+        tech_list.append(new_tech)
+
 
 for tech in tech_list:
     print(asdict(tech))
