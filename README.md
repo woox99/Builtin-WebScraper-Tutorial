@@ -17,7 +17,7 @@ Instead of making a script to scrape each company page of the site (over 50,000+
 If we use the ``inspect tool`` on a companies page and navigate to ``Network`` -> ``Fetch/XHR`` we can see a list of requests that our client is making when the page loads. Multiple of these are APIs.
 
 * If we check the ``Response`` of each one, we find that one of them send back a json response with the structure of:
-```
+```javascript
 {
     "data": {
         "companyByID": {
@@ -36,7 +36,7 @@ If we use the ``inspect tool`` on a companies page and navigate to ``Network`` -
 * If we check the ``Header`` sent with the request we can see that this is a ``POST method`` request.
 
 * If we check the ``Payload`` of this request, it has the structure:
-```
+```javascript
 {
         "operationName": "GetCompanyTechnologies",
         "query": "XYZ",
