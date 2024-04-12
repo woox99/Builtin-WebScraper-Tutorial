@@ -3,16 +3,16 @@
 
 This tutorials covers step by step instructions for scraping companies and their technologies off the job posting board builtin.com.
 
-* This tutorial uses ``API requests`` to retreive responses containing the data we want to scrape.
+* This tutorial uses ``API requests`` to retrieve responses containing the data we want to scrape.
 
-* Understanding the basics of the ``Python`` language and the basics of making API calls with an API platform such as ``Postman`` is the only pre-requisits for this tutorial.
+* Understanding the basics of the ``Python`` language and the basics of making API calls with an API platform such as ``Postman`` is the only prerequisites for this tutorial.
 
 ## Step 0.1: Investigating the Site for the API
 Lets start investigating the site: https://builtin.com
 
  On each company's page of the site, there is a list of technologies that the company uses and the technology category. This is the data that we are interested in scraping.
 
-Instead of making a script to scrape each company page of the site (over 50,000+ pages), lets investigate wether there is an API that we can access by making a request to it.
+Instead of making a script to scrape each company page of the site (over 50,000+ pages), lets investigate whether there is an API that we can access by making a request to it.
 
 If we use the ``inspect tool`` on a companies page and navigate to ``Network`` -> ``Fetch/XHR`` we can see a list of requests that our client is making when the page loads. Multiple of these are APIs.
 
@@ -50,9 +50,9 @@ It looks we have found an API that given a company's unique id, it responds with
 
 Open Postman or a similar API platform, and make a request to the ``API domain`` and copy the payload in a ``raw`` ``json`` ``body`` of the request and set the request to POST.
 
-If you've done everything correctly, it will return with a json object of the companies technolgies. 
+If you've done everything correctly, it will return with a json object of the companies technologies. 
 
-## Step 0.2: Investigating the Site for Companie's IDs
+## Step 0.2: Investigating the Site for company's IDs
 
 Now we need a way to collect all off the companies' IDs so we can make a script that makes the API request for each ID.
 
@@ -72,9 +72,9 @@ From the data we are able to collect, the data will be structured as such:
 | 12345    | Facebook   | JavaScript    | Language    |
 | 12345    | Facebook   | React    | Library    |
 
-### The raodmap of our scraper will look something like this:
+### The roadmap of our scraper will look something like this:
 * For each company on the list of companies page https://builtin.com/companies -> collect Company ID and Company Name
-* For each Company ID collected -> make the API request to retreive a list of it's technologies
+* For each Company ID collected -> make the API request to retrieve a list of it's technologies
 * For each technology collected -> append a new data entry to a .csv file with the above structure
 * Repeat for each page of list of companies (handle pagination)
 
@@ -92,7 +92,7 @@ python -m venv venv
 ```
 python -m venv venv
 ```
-* Install the nessesarry dependencies for this project with the follow command(s):
+* Install the necessary dependencies for this project with the follow command(s):
 ```
 pip3 install httpx selectolax requests
 ```
@@ -140,7 +140,7 @@ When we run this code, our console prints reponse object that will look like thi
 {'data': {'companyByID': {'technologies': [{'name': 'Java', 'urlName': 'java', 'categoryName': 'engineering/languages'}, {'name': 'JavaScript', 'urlName': 'javascript', 'categoryName': 'engineering/languages'}, {'name': 'Kotlin', 'urlName': 'kotlin', 'categoryName': 'engineering/languages'}, {'name': 'MySQL', 'urlName': 'mysql', 'categoryName': 'engineering/databases'}, {'name': 'Node.js', 'urlName': 'node-js', 'categoryName': 'engineering/frameworks'}, {'name': 'React', 'urlName': 'react', 'categoryName': 'engineering/libraries'}, {'name': 'Spring', 'urlName': 'spring', 'categoryName': 'engineering/frameworks'}, {'name': 'Teradata', 'urlName': 'teradata', 'categoryName': 'engineering/databases'}], 'extraTechnologies': [{'name': 'css', 'categoryName': 'engineering/languages'}, {'name': 'html', 'categoryName': 'engineering/languages'}, {'name': 'kafka', 'categoryName': 'engineering/languages'}]}}}
 ```
 
-We only want the ``technologies``, not the `extraTechnolgies`, and we only want the technologies that fall under the ``engineering/`` category so can clean this up a bit by adding the follow lines of code to our ``api_request.py`` script:
+We only want the ``technologies``, not the `extraTechnologies`, and we only want the technologies that fall under the ``engineering/`` category so can clean this up a bit by adding the follow lines of code to our ``api_request.py`` script:
 
 ```python
 # ..previous code here
@@ -181,7 +181,7 @@ This is how we will handle the API call for each ID but we need another script t
 ## Step 2.0: Create httpx Get Script
 Create a new file named ``get_company_id.py`` on the same level as the previous.
 
-In this file let's start creating the script that will use ``httpx`` to make a ``GET request`` to get the site's ``HTML`` so we can scrape the companie's IDs from the element:
+In this file let's start creating the script that will use ``httpx`` to make a ``GET request`` to get the site's ``HTML`` so we can scrape the company's IDs from the element:
 ```html
 <my-item entity-id='12345'></my-item>
 ```
@@ -389,7 +389,7 @@ class Tech:
 # previous code here..
 ```
 
-Let's create a function ``get_company_techs(entity_id, company_name):`` that will essentially be the functionality of our earlier created ``api_request.py`` script, but we will change it slightly to encompase the Company ID, and Compnay Name in the dataclass:
+Let's create a function ``get_company_techs(entity_id, company_name):`` that will essentially be the functionality of our earlier created ``api_request.py`` script, but we will change it slightly to encompase the Company ID, and Company Name in the dataclass:
 
 ```python
 def get_company_techs(entity_id, company_name):
@@ -461,7 +461,7 @@ Now for every technology that is scraped off the site, we will append the datacl
 | 12345    | Facebook   | JavaScript    | Language    |
 | 12345    | Facebook   | React    | Library    |
 
-Finally, I created the ``append.xlsx`` file that has the cleaned up category collumn and created a dashboard out of the data collected. Ultimating, after scraping over 50,000 companies, there was only technologies listed for approximately 2200 of them.
+Finally, I created the ``append.xlsx`` file that has the cleaned up category collumn and created a dashboard out of the data collected. Ultimately, after scraping over 50,000 companies, there was only technologies listed for approximately 2200 of them.
 
 ### API Request Tutorial Video 
 https://www.youtube.com/watch?v=DqtlR0y0suo&t=184s
